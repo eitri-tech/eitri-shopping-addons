@@ -4,4 +4,9 @@ eitri-apps:
   alias: home
   focus: true
   shared: false
+- path: ./eitri-shopping-addon-vtex-newtail
+  workspace: eitri-shopping-addon-vtex-newtail
+  alias: vtex-newtail
+  focus: false
+  shared: true
 application-id: 5e5c15f7-65cc-4c57-96b0-cbd55ddcbc5b

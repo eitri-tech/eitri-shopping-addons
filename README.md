@@ -4,33 +4,17 @@ Eitri is a modular platform for building powerful mobile apps with agility and s
 
 Learn more about [Eitri](https://www.eitri.tech/)
 
-# Eitri Shopping Addons
+# Eitri Shopping
 
-Eitri Shopping is a solution that combines scalability, customization, and seamless UX to boost conversion and engagement.
+Eitri Shopping combines scalability, customization, and seamless UX to boost conversion and engagement.
 
-### Benefícios
+## Eitri Shopping Addons
 
-- **Criação Rápida e Modular**: Desenvolva sua aplicação de forma ágil e estruturada.
-- **Sem Necessidade de Conhecimento Técnico**: Construa seu aplicativo nativo sem experiência em desenvolvimento Android ou iOS.
-- **Atualizações Imediatas**: Publique alterações nas lojas Android e iOS sem a necessidade de aprovação prévia.
-- **Controle de Versão Simplificado**: Gerencie facilmente versões e implemente rollbacks instantâneos em caso de necessidade.
+Eitri Shopping Addons are a fast and easy way to integrate common provider resources into your Eitri applications. You just need to set your Eitri-Apps to use the selected addon as dependence and import it where you need to use.
 
-Com o **Eitri**, você tem total controle sobre seu aplicativo, economizando tempo e recursos enquanto oferece uma experiência robusta e profissional para os seus clientes.
+### Avaliable addons
 
-### Desenvolvendo seu app
-
-1. Primeiro você precisa instalar a Eitri CLI:
-   ```bash
-   npm i -g eitri-cli
-
-2. Faça login em sua conta Eitri:
-   ```bash
-   eitri login
-
-3. Crie novos eitri-apps conforme sua necessidade para compor seu app:
-   ```bash
-   eitri create <nome_do_módulo>
-
+1. [Vtex Newtail]()
 
 # Como configurar sua Aplicação?
 
