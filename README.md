@@ -1,6 +1,12 @@
-# Eitri Application - Hello Daisy
+# About Eitri
 
-O **Eitri Application - Hello Daisy** é um bundle desenvolvido para simplificar a criação de aplicativos utilizando o Luminus Daisy.
+Eitri is a modular platform for building powerful mobile apps with agility and scale.
+
+Learn more about [Eitri](https://www.eitri.tech/)
+
+# Eitri Shopping Addons
+
+Eitri Shopping is a solution that combines scalability, customization, and seamless UX to boost conversion and engagement.
 
 ### Benefícios
 
