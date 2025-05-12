@@ -1,0 +1,7 @@
+eitri-apps:
+- path: ./eitri-shopping-addons-home
+  workspace: eitri-shopping-addons-home
+  alias: home
+  focus: true
+  shared: false
+application-id: 5e5c15f7-65cc-4c57-96b0-cbd55ddcbc5b
