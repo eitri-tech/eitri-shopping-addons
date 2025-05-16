@@ -15,69 +15,68 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install yq
-        run: sudo apt-get update && sudo apt-get install -y yq
-
-      - name: Install Eitri CLI
-        run: npm i -g eitri-cli
-
-      - name: Set environment ID based on branch
-        id: set-env
-        run: |
-          if [[ "${{ github.ref_name }}" == "main" ]]; then
-            echo "Branch é main, configurando para produção..."
-            echo "ENVIRONMENT_ID=55761c57-81bb-4189-999c-38b12ed14956" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "develop" ]]; then
-            echo "Branch é develop, configurando para homologação..."
-            echo "ENVIRONMENT_ID=2ddcf3e5-3bd3-492e-82b3-4830a0674636" >> $GITHUB_ENV
-          else
-            echo "Branch não reconhecida, saindo..."
-            exit 1
-          fi
-
-      - name: Detect changed folders at root
-        id: changed
-        run: |
-          echo "Detectando pastas alteradas no root..."
-          git fetch origin develop:refs/remotes/origin/develop
-          CHANGED=$(git diff --name-only origin/develop HEAD | awk -F/ '{print $1}' | sort -u | uniq)
-          CHANGED_FOLDERS=$(echo \"$CHANGED\" | tr '\n' ' ') >> $GITHUB_OUTPUT
-          echo "Pastas modificadas: $CHANGED_FOLDERS"
-
-      - name: Loop through and publish changed folders
-        run: |
-          echo "Iniciando loop nas pastas alteradas..."
-          CHANGED="${{ steps.changed.outputs.CHANGED_FOLDERS }}"
-          for folder in $CHANGED; do
-            if [ -f "$folder/eitri-app.conf" ]; then
-              echo "Entrando na pasta $folder"
-              cd "$folder"
-
-              if [ -f "eitri-app.conf.js" ]; then
-                echo "Lendo versão do eitri-app.conf.js..."
-                VERSION=$(yq ".version" eitri-app.conf.js)
-                echo "Versão encontrada: $VERSION"
-
-                echo "Executando eitri push-version..."
-                eitri push-version
-
-                echo "Publicando com eitri publish..."
-                eitri publish -e $ENVIRONMENT_ID
-              else
-                echo "Arquivo eitri-app.conf.js não encontrado em $folder. Pulando..."
-              fi
-
-              echo "Voltando para a raiz"
-              cd ..
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+      
+    - name: Install yq
+      run: sudo apt-get update && sudo apt-get install -y yq
+      
+    - name: Install Eitri CLI
+      run: npm i -g eitri-cli
+      
+    - name: Set environment ID based on branch
+      id: set-env
+      run: |
+        if [[ "${{ github.ref_name }}" == "main" ]]; then
+          echo "Branch é main, configurando para produção..."
+          echo "ENVIRONMENT_ID=55761c57-81bb-4189-999c-38b12ed14956" >> $GITHUB_ENV
+        elif [[ "${{ github.ref_name }}" == "develop" ]]; then
+          echo "Branch é develop, configurando para homologação..."
+          echo "ENVIRONMENT_ID=2ddcf3e5-3bd3-492e-82b3-4830a0674636" >> $GITHUB_ENV
+        else
+          echo "Branch não reconhecida, saindo..."
+          exit 1
+        fi
+      
+    - name: Detect changed folders at root
+      id: changed
+      run: |
+        echo "Detectando pastas alteradas no root entre commits..."
+        CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F/ '{print $1}' | sort -u | uniq)
+        echo "CHANGED_FOLDERS=$(echo \"$CHANGED\" | tr '\n' ' ')" >> $GITHUB_OUTPUT
+        echo "Pastas modificadas: $CHANGED"
+      
+    - name: Loop through and publish changed folders
+      run: |
+        echo "Iniciando loop nas pastas alteradas..."
+        CHANGED="${{ steps.changed.outputs.CHANGED_FOLDERS }}"
+        for folder in $CHANGED; do
+          if [ -f "$folder/eitri-app.conf" ]; then
+            echo "Entrando na pasta $folder"
+            cd "$folder"
+      
+            if [ -f "eitri-app.conf.js" ]; then
+              echo "Lendo versão do eitri-app.conf.js..."
+              VERSION=$(yq ".version" eitri-app.conf.js)
+              echo "Versão encontrada: $VERSION"
+      
+              echo "Executando eitri push-version..."
+              eitri push-version
+      
+              echo "Publicando com eitri publish..."
+              eitri publish -e $ENVIRONMENT_ID
             else
-              echo "Arquivo eitri-app.conf não encontrado em $folder. Pulando..."
+              echo "Arquivo eitri-app.conf.js não encontrado em $folder. Pulando..."
             fi
-          done
+      
+            echo "Voltando para a raiz"
+            cd ..
+          else
+            echo "Arquivo eitri-app.conf não encontrado em $folder. Pulando..."
+          fi
+        done
