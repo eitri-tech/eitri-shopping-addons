@@ -1,11 +1,47 @@
 import { useTranslation } from "eitri-i18n";
 import Eitri from "eitri-bifrost";
-import { Text, View, Image, Button, Page } from "eitri-luminus";
+import { Text, View, Image, Button, Page, Carousel } from "eitri-luminus";
 import HeaderComponent from "../components/HeaderComponent";
 import Presentation from "../assets/images/presentation.webp";
+import AddonService from "../services/AddonService";
 
 export default function Home(props) {
   const { t } = useTranslation();
+  const [addons, setAddons] = useState([]);
+
+  useEffect(() => {
+    fetchAddons();
+  }, []);
+
+  const requestData = {
+    context: "search",
+    term: "teste",
+    user_id: "6a746448-cf59-42bc-aa3d-a426844ad115",
+    session_id: "f361661f-5986-4779-9009-a34562f18347",
+    placements: {
+      bannerhome: { quantity: 1, size: "200x200", types: ["banner"] },
+    },
+  };
+
+  // Verificar formato do result com mais de um banner
+  const fetchAddons = async () => {
+    try {
+      const result = await AddonService.getAddons(requestData, "72c5a3e2-853e-449d-afda-fa41d8eb2bec");
+      await setAddons(result.bannerhome);
+      console.log("Notifying impression...");
+      await notifyEvent(result.bannerhome[0].impression_url);
+    } catch (error) {
+      console.error("Search failed:", error);
+    }
+  }
+
+  const notifyEvent = async (url) => {
+    const data = {
+      userId: "6a746448-cf59-42bc-aa3d-a426844ad115",
+      sessionId: "f361661f-5986-4779-9009-a34562f18347",
+    };
+    await AddonService.notifyEvent(url, data);
+  }
 
   return (
     <Page className="w-screen h-screen">
@@ -23,10 +59,37 @@ export default function Home(props) {
             </Text>
           </View>
 
+          <Carousel
+            config={{
+              showArrows: true,
+              showIndicators: true,
+              snapTo: 'center',
+              loop: true,
+              autoPlay: true,
+              interval: 3000,
+            }}
+          >
+            {addons.map((image) => (
+              <Carousel.Item key={image.campaign_name} className="w-full flex justify-center items-center">
+                <View onClick={async () => await Eitri.openBrowser({ url: image.click_url })} >
+                  <Image
+                    src={image.media_url}
+                    alt={image.name}
+                    onLoad={() => {
+                      console.log("Notifying view...")
+                      notifyEvent(image.view_url);
+                    }}
+                  />
+                </View>
+              </Carousel.Item>
+            ))}
+          </Carousel>
+
+
           <Button
             className="btn btn-secondary mt-16 w-full"
             onClick={async () =>
-              await Eitri.navigation.navigate({ path: "/Products/List" })
+              await Eitri.navigation.navigate({ path: "Products/Products" })
             }
           >
             {t("home.button")}

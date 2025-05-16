@@ -15,6 +15,4 @@ export default class CalcService {
     static division = (num1 = 0, num2 = 0) => {
         return num1 / num2
     }
-
-
 }
