@@ -26,29 +26,21 @@ export default function Home(props) {
   // Verificar formato do result com mais de um banner
   const fetchAddons = async () => {
     try {
-      const result = await AddonService.getAddons(requestData);
+      const result = await AddonService.getAddons(requestData, "72c5a3e2-853e-449d-afda-fa41d8eb2bec");
       await setAddons(result.bannerhome);
-      await sendImpression(result.bannerhome.impression_url);
-      console.log("Addons fetched successfully:", result.bannerhome);
+      console.log("Notifying impression...");
+      await notifyEvent(result.bannerhome[0].impression_url);
     } catch (error) {
       console.error("Search failed:", error);
     }
   }
 
-  const sendImpression = async (impressionUrl) => {
+  const notifyEvent = async (url) => {
     const data = {
       userId: "6a746448-cf59-42bc-aa3d-a426844ad115",
       sessionId: "f361661f-5986-4779-9009-a34562f18347",
     };
-    await AddonService.sendImpression(impressionUrl, data);
-  }
-
-  const sendView = async (viewUrl) => {
-    const data = {
-      userId: "6a746448-cf59-42bc-aa3d-a426844ad115",
-      sessionId: "f361661f-5986-4779-9009-a34562f18347",
-    };
-    await AddonService.sendView(viewUrl, data);
+    await AddonService.notifyEvent(url, data);
   }
 
   return (
@@ -84,8 +76,8 @@ export default function Home(props) {
                     src={image.media_url}
                     alt={image.name}
                     onLoad={() => {
-                      sendView(image.view_url);
-                      console.log("View URL sent:", image.view_url);
+                      console.log("Notifying view...")
+                      notifyEvent(image.view_url);
                     }}
                   />
                 </View>
