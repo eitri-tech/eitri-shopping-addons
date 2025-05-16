@@ -49,7 +49,8 @@ jobs:
           echo "Detectando pastas alteradas no root..."
           git fetch origin develop:refs/remotes/origin/develop
           CHANGED=$(git diff --name-only origin/develop HEAD | awk -F/ '{print $1}' | sort -u | uniq)
-          echo "CHANGED_FOLDERS=$(echo \"$CHANGED\" | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          CHANGED_FOLDERS=$(echo \"$CHANGED\" | tr '\n' ' ') >> $GITHUB_OUTPUT
+          echo "Pastas modificadas: $CHANGED_FOLDERS"
 
       - name: Loop through and publish changed folders
         run: |
