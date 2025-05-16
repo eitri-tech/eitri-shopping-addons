@@ -12,6 +12,7 @@ module.exports = {
   "organizationId": "cf5660ee-bf90-42cd-9a43-9d2c69ee3c89",
   "organization": {},
   "type": "module",
+  "sharedVersion": "v2",
   "eitri-app-dependencies": {
     'i18n': { "version": "14.1.2"}
   }
