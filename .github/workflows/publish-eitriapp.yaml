@@ -1,0 +1,76 @@
+name: Publish Eitriapp
+
+on:
+   push:
+      branches:
+            - develop
+            - main
+
+env:
+    EITRI_CLI_CLIENT_ID: ${{secrets.EITRI_CLI_CLIENT_ID}}
+    EITRI_CLI_CLIENT_SECRET: ${{secrets.EITRI_CLI_CLIENT_SECRET}}
+
+jobs:
+    publish-miniapp:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkot repo
+          uses: actions/checkout@v3
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: 18
+
+        - name: Login to Eitri
+          run: |
+            echo "Instalando a CLI do Eitri..."
+            npm i -g eitri-cli
+
+        - name: Set variables
+          run: |
+                  if [[ "${{ github.ref_name }}" == "main" ]]; then
+                    echo "Branch é main, configurando para produção..."
+                    ENVIRONMENT_ID="55761c57-81bb-4189-999c-38b12ed14956"
+                  elif [[ "${{ github.ref_name }}" == "develop" ]]; then
+                    echo "Branch é develop, configurando para homologação..."
+                    ENVIRONMENT_ID="2ddcf3e5-3bd3-492e-82b3-4830a0674636"
+                  else
+                    echo "Branch não reconhecida, saindo..."
+                    exit 1
+                  fi
+
+        - name: Detect changed folders at root
+          id: changed
+          run: |
+            echo "Detectando pastas alteradas no root..."
+            git fetch origin develop:refs/remotes/origin/develop
+            CHANGED=$(git diff --name-only origin/develop HEAD | awk -F/ '{print $1}' | sort -u | uniq)
+            echo "CHANGED_FOLDERS<<EOF" >> $GITHUB_OUTPUT
+            echo "$CHANGED" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+
+
+        - name: Loop through changed folders
+          run: |
+            echo "Iniciando loop nas pastas alteradas..."
+            for folder in ${{ steps.changed.outputs.CHANGED_FOLDERS }}; do
+              if [ -d "$/eitri-app.conf" ]; then
+                echo "Entrando na pasta $folder"
+                cd "$folder"
+
+                echo "Pegando versão do conf..."
+                VERSION=$(yq ".version" app-config.yaml)
+                echo "Versão extraída: $VERSION"
+
+                echo "Gerando versão com eitriapp..."
+                eitri push-version
+
+                echo "Publicando em produção com eitriapp..."
+                eitri publish -e $ENVIRONMENT_ID
+
+                echo "Voltando para a raiz"
+                cd ..
+              fi
+            done
