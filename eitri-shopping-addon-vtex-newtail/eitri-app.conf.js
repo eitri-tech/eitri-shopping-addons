@@ -2,7 +2,7 @@ module.exports = {
   "name": "eitri-shopping-addons-vtex-newtail",
   "title": "eitri-shopping-addons-vtex-newtail",
   "slug": "eitri-shopping-addons-vtex-newtail",
-  "eitri-luminus": "2.0.0",
+  "eitri-luminus": "2.0.1",
   "eitri-bifrost": "3.8.0",
   "eitri-commons": "2.1.2",
   "version": "0.1.0",
