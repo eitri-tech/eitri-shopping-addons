@@ -50,7 +50,7 @@ jobs:
           git fetch origin ${{ github.ref_name }}
 
           # Listar arquivos alterados
-          CHANGED=$(git diff --name-only origin/${{ github.ref_name }}..HEAD | awk -F/ '{print $1}' | sort -u | uniq)
+          CHANGED=$(git diff HEAD~1 HEAD | awk -F/ '{print $1}' | sort -u | uniq)
           echo "Arquivos alterados: $CHANGED"
 
           CHANGED_APPS=""
