@@ -33,59 +33,61 @@ jobs:
         id: set-env
         run: |
           if [[ "${{ github.ref_name }}" == "main" ]]; then
+            echo "Branch é main, configurando para produção..."
             echo "ENVIRONMENT_ID=55761c57-81bb-4189-999c-38b12ed14956" >> $GITHUB_ENV
           elif [[ "${{ github.ref_name }}" == "develop" ]]; then
+            echo "Branch é develop, configurando para homologação..."
             echo "ENVIRONMENT_ID=2ddcf3e5-3bd3-492e-82b3-4830a0674636" >> $GITHUB_ENV
           else
             echo "Branch não reconhecida, saindo..."
             exit 1
           fi
 
-
       - name: Detect changed folders at root
         id: changed
         run: |
-            echo "Detectando pastas alteradas..."
-  
-            # Verificar arquivos modificados entre último e penúltimo commit
-            CHANGED=$(git diff --name-only HEAD~1 HEAD | awk -F/ '{print $1}' | sort -u | uniq)
-  
-            echo "Arquivos alterados: $CHANGED"
-  
-            CHANGED_APPS=""
-            for folder in $CHANGED; do
-              if [ -f "$folder/eitri-app.conf.js" ]; then
-                CHANGED_APPS="$CHANGED_APPS $folder"
-              fi
-            done
-  
-            echo "CHANGED_FOLDERS=$(echo "$CHANGED_APPS" | xargs)" >> $GITHUB_OUTPUT
-  
+          echo "Detectando pastas alteradas..."
+          git fetch origin ${{ github.ref_name }}
+
+          # Listar arquivos alterados
+          CHANGED=$(git diff --name-only origin/${{ github.ref_name }}..HEAD | awk -F/ '{print $1}' | sort -u | uniq)
+          echo "Arquivos alterados: $CHANGED"
+
+          CHANGED_APPS=""
+          for folder in $CHANGED; do
+            echo "Verificando pasta: $folder"
+            if [ -f "$folder/eitri-app.conf.js" ]; then
+              CHANGED_APPS="$CHANGED_APPS $folder"
+            fi
+          done
+
+          
+          echo "CHANGED_FOLDERS=$(echo \"$CHANGED_APPS\" | xargs)" >> $GITHUB_OUTPUT
+          echo "Pastas com eitri-app.conf.js alteradas: $CHANGED_APPS"
 
       - name: Loop through and publish changed folders
         run: |
           echo "Iniciando loop nas pastas alteradas..."
           CHANGED="${{ steps.changed.outputs.CHANGED_FOLDERS }}"
 
-          if [ -z "$CHANGED" ]; then
-            echo "Nenhuma pasta com eitri-app.conf.js foi modificada. Encerrando."
-            exit 0
-          fi
-
           for folder in $CHANGED; do
-            echo "Entrando na pasta $folder"
-            cd "$folder"
+            if [ -f "$folder/eitri-app.conf.js" ]; then
+              echo "Entrando na pasta $folder"
+              cd "$folder"
 
-            echo "Lendo versão do eitri-app.conf.js..."
-            VERSION=$(node -p "require('./eitri-app.conf.js').version")
-            echo "Versão encontrada: $VERSION"
+              echo "Lendo versão do eitri-app.conf.js..."
+              VERSION=$(node -p "require('./eitri-app.conf.js').version")
+              echo "Versão encontrada: $VERSION"
 
-            echo "Executando eitri push-version..."
-            eitri push-version --shared
+              echo "Executando eitri push-version..."
+              eitri push-version --shared
 
-            echo "Publicando com eitri publish..."
-            eitri publish -e $ENVIRONMENT_ID
+              echo "Publicando com eitri publish..."
+              eitri publish -e $ENVIRONMENT_ID
 
-            echo "Voltando para a raiz"
-            cd ..
+              echo "Voltando para a raiz"
+              cd ..
+            else
+              echo "Arquivo eitri-app.conf.js não encontrado em $folder. Pulando..."
+            fi
           done
