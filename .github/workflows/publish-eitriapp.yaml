@@ -46,9 +46,11 @@ jobs:
       - name: Detect changed folders at root
         id: changed
         run: |
-          echo "Detectando pastas alteradas no root entre commits..."
-          # Lista as primeiras pastas dos arquivos alterados, ignora arquivos na raiz
-          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '/' | awk -F/ '{print $1}' | sort -u | uniq)
+          echo "Detectando pastas alteradas..."
+          git fetch origin ${{ github.ref_name }}
+          CHANGED=$(git diff --name-only origin/${{ github.ref_name }}...HEAD | awk -F/ '{print $1}' | sort -u | uniq)
+          echo "Arquivos alterados:"
+          git diff --name-only origin/${{ github.ref_name }}...HEAD
           CHANGED_APPS=""
           for folder in $CHANGED; do
             if [ -f "$folder/eitri-app.conf.js" ]; then
@@ -56,12 +58,13 @@ jobs:
             fi
           done
           echo "CHANGED_FOLDERS=$(echo \"$CHANGED_APPS\" | xargs)" >> $GITHUB_OUTPUT
-          echo "Pastas modificadas com eitri-app.conf.js: $CHANGED_APPS"
+          echo "Pastas com eitri-app.conf.js alteradas: $CHANGED_APPS"
 
       - name: Loop through and publish changed folders
         run: |
           echo "Iniciando loop nas pastas alteradas..."
           CHANGED="${{ steps.changed.outputs.CHANGED_FOLDERS }}"
+
           for folder in $CHANGED; do
             if [ -f "$folder/eitri-app.conf.js" ]; then
               echo "Entrando na pasta $folder"
