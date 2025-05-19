@@ -76,7 +76,7 @@ jobs:
               cd "$folder"
 
               echo "Lendo versão do eitri-app.conf.js..."
-              VERSION=$(yq ".version" eitri-app.conf.js)
+              VERSION=$(node -p "require('./eitri-app.conf.js').version")
               echo "Versão encontrada: $VERSION"
 
               echo "Executando eitri push-version..."
