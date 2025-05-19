@@ -48,15 +48,20 @@ jobs:
         run: |
           echo "Detectando pastas alteradas..."
           git fetch origin ${{ github.ref_name }}
-          CHANGED=$(git diff --name-only origin/${{ github.ref_name }}...HEAD | awk -F/ '{print $1}' | sort -u | uniq)
-          echo "Arquivos alterados:"
-          git diff --name-only origin/${{ github.ref_name }}...HEAD
+
+          # Listar arquivos alterados
+          CHANGED=$(git diff --name-only origin/${{ github.ref_name }}..HEAD | awk -F/ '{print $1}' | sort -u | uniq)
+          echo "Arquivos alterados: $CHANGED"
+
           CHANGED_APPS=""
           for folder in $CHANGED; do
+            echo "Verificando pasta: $folder"
             if [ -f "$folder/eitri-app.conf.js" ]; then
               CHANGED_APPS="$CHANGED_APPS $folder"
             fi
           done
+
+          # Adicionar ao GITHUB_OUTPUT
           echo "CHANGED_FOLDERS=$(echo \"$CHANGED_APPS\" | xargs)" >> $GITHUB_OUTPUT
           echo "Pastas com eitri-app.conf.js alteradas: $CHANGED_APPS"
 
