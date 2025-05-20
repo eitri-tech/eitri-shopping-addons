@@ -47,47 +47,48 @@ jobs:
         id: changed
         run: |
           echo "Detectando pastas alteradas..."
+
           git fetch origin ${{ github.ref_name }}
 
-          # Listar arquivos alterados
-          CHANGED=$(git diff HEAD~1 HEAD | awk -F/ '{print $1}' | sort -u | uniq)
-          echo "Arquivos alterados: $CHANGED"
+          CHANGED=$(git diff --name-only origin/${{ github.ref_name }}...${{ github.sha }} \
+            | awk -F/ '{print $1}' \
+            | sort -u \
+            | grep -vE '^\.')
+
+          echo "Pastas candidatas: $CHANGED"
 
           CHANGED_APPS=""
           for folder in $CHANGED; do
-            echo "Verificando pasta: $folder"
             if [ -f "$folder/eitri-app.conf.js" ]; then
+              echo "✅ $folder contém eitri-app.conf.js"
               CHANGED_APPS="$CHANGED_APPS $folder"
             fi
           done
 
-          
-          echo "CHANGED_FOLDERS=$(echo \"$CHANGED_APPS\" | xargs)" >> $GITHUB_OUTPUT
-          echo "Pastas com eitri-app.conf.js alteradas: $CHANGED_APPS"
+          echo "changed_folders=$(echo \"$CHANGED_APPS\" | xargs)" >> $GITHUB_OUTPUT
+          echo "Pastas com alterações relevantes: $CHANGED_APPS"
 
       - name: Loop through and publish changed folders
         run: |
-          echo "Iniciando loop nas pastas alteradas..."
-          CHANGED="${{ steps.changed.outputs.CHANGED_FOLDERS }}"
+          echo "Iniciando publicação nas pastas alteradas..."
+
+          CHANGED="${{ steps.changed.outputs.changed_folders }}"
 
           for folder in $CHANGED; do
-            if [ -f "$folder/eitri-app.conf.js" ]; then
-              echo "Entrando na pasta $folder"
-              cd "$folder"
+            echo "📁 Processando pasta $folder"
 
-              echo "Lendo versão do eitri-app.conf.js..."
-              VERSION=$(node -p "require('./eitri-app.conf.js').version")
-              echo "Versão encontrada: $VERSION"
+            cd "$folder"
 
-              echo "Executando eitri push-version..."
-              eitri push-version --shared
+            echo "🔍 Lendo versão de $folder..."
+            VERSION=$(node -p "require('./eitri-app.conf.js').version")
+            echo "Versão detectada: $VERSION"
 
-              echo "Publicando com eitri publish..."
-              eitri publish -e $ENVIRONMENT_ID
+            echo "🚀 Executando 'eitri push-version --shared'"
+            eitri push-version --shared
 
-              echo "Voltando para a raiz"
-              cd ..
-            else
-              echo "Arquivo eitri-app.conf.js não encontrado em $folder. Pulando..."
-            fi
+            echo "📦 Publicando com 'eitri publish -e $ENVIRONMENT_ID'"
+            eitri publish -e $ENVIRONMENT_ID
+
+            echo "⬅️ Voltando para a raiz do projeto"
+            cd -
           done
