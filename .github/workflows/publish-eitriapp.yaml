@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Pega histórico completo para evitar problemas com diffs
+          fetch-depth: 0  # Histórico completo para permitir diffs com segurança
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -55,6 +55,16 @@ jobs:
 
           echo "Comparando $BEFORE_SHA -> $CURRENT_SHA"
 
+          # Busca o SHA anterior se não estiver localmente
+          git fetch origin $BEFORE_SHA || echo "Não foi possível buscar SHA anterior (talvez seja um commit inicial)"
+
+          # Verifica se o SHA anterior está disponível
+          if ! git cat-file -e "$BEFORE_SHA"^{commit}; then
+            echo "❌ SHA anterior não encontrado localmente. Diferença será ignorada."
+            echo "changed_folders=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           CHANGED=$(git diff --name-only "$BEFORE_SHA" "$CURRENT_SHA" \
             | awk -F/ '{print $1}' \
             | sort -u \
@@ -78,6 +88,11 @@ jobs:
           echo "Iniciando publicação nas pastas alteradas..."
 
           CHANGED="${{ steps.changed.outputs.changed_folders }}"
+
+          if [ -z "$CHANGED" ]; then
+            echo "Nenhuma pasta relevante foi alterada. Finalizando."
+            exit 0
+          fi
 
           for folder in $CHANGED; do
             echo "📁 Processando pasta $folder"
