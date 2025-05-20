@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 2  # Garante histórico para o git diff
+          fetch-depth: 0  # Pega histórico completo para evitar problemas com diffs
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -48,13 +48,14 @@ jobs:
       - name: Detect changed folders at root
         id: changed
         run: |
-          echo "Detectando pastas alteradas..."
+          echo "Detectando pastas alteradas com segurança..."
 
-          # Garante que há dois commits para comparação
-          git fetch --no-tags --prune --depth=2 origin ${{ github.ref_name }}
+          BEFORE_SHA="${{ github.event.before }}"
+          CURRENT_SHA="${{ github.sha }}"
 
-          # Lista de pastas de primeiro nível alteradas entre os dois commits mais recentes
-          CHANGED=$(git diff --name-only HEAD^ HEAD \
+          echo "Comparando $BEFORE_SHA -> $CURRENT_SHA"
+
+          CHANGED=$(git diff --name-only "$BEFORE_SHA" "$CURRENT_SHA" \
             | awk -F/ '{print $1}' \
             | sort -u \
             | grep -vE '^\.')
