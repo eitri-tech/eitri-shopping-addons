@@ -38,12 +38,12 @@ jobs:
           echo "Detectando módulos alterados..."
           CHANGED_MODULES=""
 
-          # Obter alterações
+          # Obtém alterações entre HEAD local e remoto
           git fetch origin ${{ github.ref_name }}
           CHANGED_FILES=$(git diff --name-only origin/${{ github.ref_name }})
 
-          # Extrair paths
-          MODULE_PATHS=$(yq eval '.["eitri-apps"][].path' app-config.yaml)
+          # Extrai paths dos módulos do app-config.yaml
+          MODULE_PATHS=$(yq eval '.eitri-apps[].path' app-config.yaml)
 
           for path in $MODULE_PATHS; do
             if echo "$CHANGED_FILES" | grep -q "^${path}/"; then
@@ -59,17 +59,17 @@ jobs:
         run: |
           for module in ${{ steps.detect.outputs.changed_modules }}; do
             echo "Processando módulo: $module"
-            
+
             cd $module
 
-            # Determina envId
+            # Determina ambiente (DEV ou PROD)
             if [[ "${{ github.ref_name }}" == "main" ]]; then
               ENV_ID="${{ env.PROD_ENVID }}"
             else
               ENV_ID="${{ env.DEV_ENVID }}"
             fi
 
-            # Verifica se shared
+            # Verifica se o módulo é compartilhado
             SHARED=$(yq eval ".\"eitri-apps\"[] | select(.path == \"./$module\") | .shared" ../app-config.yaml)
 
             if [[ "$SHARED" == "true" ]]; then
