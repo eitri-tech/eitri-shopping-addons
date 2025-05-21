@@ -54,14 +54,18 @@ jobs:
 
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
 
-          echo "📝 Arquivos alterados:"
+          echo "📝 Arquivos alterados detectados:"
           echo "$CHANGED_FILES"
 
           MODULE_PATHS=$(yq eval '.eitri-apps[].path' app-config.yaml)
 
+          echo "📂 Paths configurados no app-config.yaml:"
+          echo "$MODULE_PATHS"
+
           for path in $MODULE_PATHS; do
-            echo "🔎 Verificando se $path foi alterado..."
-            if echo "$CHANGED_FILES" | grep -q "^${path}/"; then
+            NORMALIZED_PATH=${path#./}
+            echo "🔎 Verificando se $NORMALIZED_PATH foi alterado..."
+            if echo "$CHANGED_FILES" | grep -q "^${NORMALIZED_PATH}/"; then
               echo "✅ Módulo $path alterado."
               CHANGED_MODULES="$CHANGED_MODULES $path"
             fi
