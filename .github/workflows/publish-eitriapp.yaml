@@ -53,7 +53,7 @@ jobs:
         id: detect
         run: |
           set -e
-          set -x
+          set +x
           trap 'echo "❌ Falha na detecção de eitri-apps alterados!"' ERR
 
           echo "🔍 Detectando eitri-apps alterados..."
@@ -107,7 +107,7 @@ jobs:
         if: steps.detect.outputs.changed_modules != ''
         run: |
           set -e
-          set -x
+          set +x
           trap 'echo "❌ Falha no processamento dos eitri-apps!"' ERR
 
           SUCCESSFUL_MODULES=""
