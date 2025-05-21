@@ -128,7 +128,9 @@ jobs:
 
             echo "🌍 Ambiente selecionado: $ENV_ID"
 
-            SHARED=$(yq eval ".\"eitri-apps\"[] | select(.path == \"./$module\") | .shared" ../app-config.yaml)
+            SHARED=$(yq eval '. "eitri-apps"[] | select(.path == "./'"$(printf '%s' "$module")"'") | .shared // "false"' ../app-config.yaml)
+
+            echo "🔍 Valor de SHARED para $module: [$SHARED]"
 
             if [[ "$SHARED" == "true" ]]; then
               echo "🔗 Módulo $module é compartilhado. Executando 'eitri push-version --shared'"
