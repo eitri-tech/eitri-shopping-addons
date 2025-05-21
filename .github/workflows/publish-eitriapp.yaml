@@ -131,7 +131,7 @@ jobs:
             NORMALIZED_MODULE=$(printf '%s' "$module" | tr -d '\r\n')
             echo "🔍 Normalized module: [$NORMALIZED_MODULE]"
 
-            SHARED=$(yq eval '. "eitri-apps"[] | select(.path == "./'"$NORMALIZED_MODULE"'") | .shared' ../app-config.yaml)
+            SHARED=$(yq eval '.eitri-apps[] | select(.path == "./'"$NORMALIZED_MODULE"'") | .shared' ../app-config.yaml)
 
             echo "🔍 Valor de SHARED para $module: [$SHARED]"
 
