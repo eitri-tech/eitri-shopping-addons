@@ -1,4 +1,4 @@
-name: Publish Eitri Apps
+name: Push and publish Eitri Application
 
 on:
   pull_request:
@@ -49,14 +49,14 @@ jobs:
           echo "$HOME/bin" >> $GITHUB_PATH
           yq --version
 
-      - name: Detect changed Eitri apps
+      - name: Detect changed Eitri-apps
         id: detect
         run: |
           set -e
           set -x
-          trap 'echo "❌ Falha na detecção de módulos alterados!"' ERR
+          trap 'echo "❌ Falha na detecção de eitri-apps alterados!"' ERR
 
-          echo "🔍 Detectando módulos alterados..."
+          echo "🔍 Detectando eitri-apps alterados..."
 
           if [ ! -f app-config.yaml ]; then
             echo "❌ Arquivo app-config.yaml não encontrado na raiz do repositório."
@@ -88,7 +88,7 @@ jobs:
             MATCH=$(echo "$CHANGED_FILES" | grep -E "^${NORMALIZED_PATH}/" || true)
 
             if [ -n "$MATCH" ]; then
-              echo "✅ Módulo $path alterado."
+              echo "✅ Eitri-app $path alterado."
               CHANGED_MODULES="$CHANGED_MODULES $path"
             else
               echo "❌ Nenhuma alteração detectada em ./$NORMALIZED_PATH."
@@ -96,22 +96,22 @@ jobs:
           done
 
           if [ -z "$CHANGED_MODULES" ]; then
-            echo "✅ Nenhum módulo alterado."
+            echo "✅ Nenhum eitri-app alterado."
           else
-            echo "✅ Módulos alterados: $CHANGED_MODULES"
+            echo "✅ Eitri-apps alterados: $CHANGED_MODULES"
           fi
 
           echo "changed_modules=$CHANGED_MODULES" >> $GITHUB_OUTPUT
 
-      - name: Process changed modules
+      - name: Process changed eitri-apps
         if: steps.detect.outputs.changed_modules != ''
         run: |
           set -e
           set -x
-          trap 'echo "❌ Falha no processamento dos módulos!"' ERR
+          trap 'echo "❌ Falha no processamento dos eitri-apps!"' ERR
 
           for module in ${{ steps.detect.outputs.changed_modules }}; do
-            echo "🚀 Processando módulo: $module"
+            echo "🚀 Processando eitri-app: $module"
 
             if [ ! -d "$module" ]; then
               echo "⚠️ Diretório $module não encontrado. Pulando..."
@@ -129,7 +129,7 @@ jobs:
             echo "🌍 Ambiente selecionado: $ENV_ID"
 
             NORMALIZED_MODULE=$(printf '%s' "$module" | tr -d '\r\n')
-            echo "✅ Normalized module: [$NORMALIZED_MODULE]"
+            echo "✅ Normalized eitri-app: [$NORMALIZED_MODULE]"
 
             echo "✅ Todos os paths em app-config.yaml:"
             yq eval '.eitri-apps[].path' ../app-config.yaml
@@ -139,10 +139,10 @@ jobs:
             echo "🔍 Valor de SHARED para $module: [$SHARED]"
 
             if [[ "${SHARED,,}" == "true" ]]; then
-              echo "🔗 Módulo $module é compartilhado. Executando 'eitri push-version --shared'"
+              echo "🔗 Eitri-app $module é compartilhado. Executando 'eitri push-version --shared'"
               eitri push-version --shared
             else
-              echo "🔗 Módulo $module não é compartilhado. Executando 'eitri push-version'"
+              echo "🔗 Eitri-app $module não é compartilhado. Executando 'eitri push-version'"
               eitri push-version
             fi
 
@@ -150,5 +150,5 @@ jobs:
             eitri publish -e $ENV_ID
 
             cd -
-            echo "✅ Finalizado processamento do módulo: $module"
+            echo "✅ Finalizado processamento do eitri-app: $module"
           done
