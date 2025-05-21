@@ -12,10 +12,9 @@ on:
         required: true
         type: choice
         options:
-          - '55761c57-81bb-4189-999c-38b12ed14956'  # DEV
-          - '2ddcf3e5-3bd3-492e-82b3-4830a0674636'  # PROD
-          - 'none'  # Não publicar
-
+          - 'DEV'
+          - 'PROD'
+          - 'Não publicar'
 env:
   EITRI_CLI_CLIENT_ID: ${{ secrets.EITRI_CLI_CLIENT_ID }}
   EITRI_CLI_CLIENT_SECRET: ${{ secrets.EITRI_CLI_CLIENT_SECRET }}
@@ -23,6 +22,9 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      DEV_ID: '55761c57-81bb-4189-999c-38b12ed14956'
+      PROD_ID: '2ddcf3e5-3bd3-492e-82b3-4830a0674636'
 
     steps:
       - name: Checkout repository
@@ -46,6 +48,30 @@ jobs:
           echo "$HOME/bin" >> $GITHUB_PATH
           yq --version
 
+          steps:
+      - name: Map env_id
+        id: map
+        run: |
+          case "${{ github.event.inputs.env_id }}" in
+            DEV)
+              echo "ENV_UUID=${DEV_ID}" >> "$GITHUB_ENV"
+              ;;
+            PROD)
+              echo "ENV_UUID=${PROD_ID}" >> "$GITHUB_ENV"
+              ;;
+            Não publicar)
+              echo "ENV_UUID=none" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Ambiente inválido" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Usar o ENV_UUID
+        run: |
+          echo "Publicando no ambiente: $ENV_UUID"
+      
       - name: Process selected modules
         run: |
           set -e
