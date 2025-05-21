@@ -26,7 +26,7 @@ jobs:
             echo "❌ PR foi fechado sem merge. Encerrando pipeline."
             exit 0
           fi
-          echo "✅ PR foi mergeado. Continuando pipeline..."
+          echo "☑️ PR foi mergeado. Continuando pipeline..."
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -88,17 +88,17 @@ jobs:
             MATCH=$(echo "$CHANGED_FILES" | grep -E "^${NORMALIZED_PATH}/" || true)
 
             if [ -n "$MATCH" ]; then
-              echo "✅ Eitri-app $path alterado."
+              echo "☑️ Eitri-app $path alterado."
               CHANGED_MODULES="$CHANGED_MODULES $path"
             else
-              echo "❌ Nenhuma alteração detectada em ./$NORMALIZED_PATH."
+              echo "⚠️ Nenhuma alteração detectada em ./$NORMALIZED_PATH."
             fi
           done
 
           if [ -z "$CHANGED_MODULES" ]; then
-            echo "✅ Nenhum eitri-app alterado."
+            echo "☑️ Nenhum eitri-app alterado."
           else
-            echo "✅ Eitri-apps alterados: $CHANGED_MODULES"
+            echo "☑️ Eitri-apps alterados: $CHANGED_MODULES"
           fi
 
           echo "changed_modules=$CHANGED_MODULES" >> $GITHUB_OUTPUT
@@ -114,7 +114,7 @@ jobs:
           FAILED_MODULES=""
 
           for module in ${{ steps.detect.outputs.changed_modules }}; do
-            echo "🚀 Processando eitri-app: $module"
+            echo "⚙️ Processando eitri-app: $module"
 
             if [ ! -d "$module" ]; then
               echo "⚠️ Diretório $module não encontrado. Pulando..."
@@ -133,9 +133,9 @@ jobs:
             echo "🌍 Ambiente selecionado: $ENV_ID"
 
             NORMALIZED_MODULE=$(printf '%s' "$module" | tr -d '\r\n')
-            echo "✅ Normalized eitri-app: [$NORMALIZED_MODULE]"
+            echo "☑️ Normalized eitri-app: [$NORMALIZED_MODULE]"
 
-            echo "✅ Todos os paths em app-config.yaml:"
+            echo "☑️ Todos os paths em app-config.yaml:"
             yq eval '.eitri-apps[].path' ../app-config.yaml
 
             SHARED=$(yq eval '.eitri-apps[] | select(.path | sub("^\\./"; "") == "'"$NORMALIZED_MODULE"'") | .shared' ../app-config.yaml)
@@ -161,7 +161,7 @@ jobs:
             fi
 
             if [[ "${{ github.base_ref }}" == "develop" ]]; then
-              echo "📦 Publicando com 'eitri publish -e $ENV_ID'"
+              echo "🚀 Publicando com 'eitri publish -e $ENV_ID'"
               if ! eitri publish -e $ENV_ID; then
                 echo "❌ Falha ao executar publish no módulo $module"
                 FAILED_MODULES="$FAILED_MODULES $module"
@@ -169,7 +169,7 @@ jobs:
                 continue
               fi
             else
-              echo "🚫 Publicação desativada, PR não é para develop."
+              echo "⚠️ Publicação desativada, PR não é para develop."
             fi
 
             SUCCESSFUL_MODULES="$SUCCESSFUL_MODULES $module"
