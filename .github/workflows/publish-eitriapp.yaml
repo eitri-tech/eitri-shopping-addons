@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Pega todo histórico para que merge-base funcione corretamente
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -52,7 +54,13 @@ jobs:
 
           CHANGED_MODULES=""
 
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          echo "🔄 Buscando alterações remotas..."
+          git fetch origin ${{ github.ref_name }}
+
+          MERGE_BASE=$(git merge-base HEAD origin/${{ github.ref_name }})
+          echo "🔗 Merge-base encontrado: $MERGE_BASE"
+
+          CHANGED_FILES=$(git diff --name-only $MERGE_BASE HEAD)
 
           echo "📝 Arquivos alterados detectados:"
           echo "$CHANGED_FILES"
