@@ -31,7 +31,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Para garantir que todos os commits estão disponíveis
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -129,13 +129,16 @@ jobs:
             echo "🌍 Ambiente selecionado: $ENV_ID"
 
             NORMALIZED_MODULE=$(printf '%s' "$module" | tr -d '\r\n')
-            echo "🔍 Normalized module: [$NORMALIZED_MODULE]"
+            echo "✅ Normalized module: [$NORMALIZED_MODULE]"
 
-            SHARED=$(yq eval '.eitri-apps[] | select(.path == "./'"$NORMALIZED_MODULE"'") | .shared' ../app-config.yaml)
+            echo "✅ Todos os paths em app-config.yaml:"
+            yq eval '.eitri-apps[].path' ../app-config.yaml
+
+            SHARED=$(yq eval '.eitri-apps[] | select(.path | sub("^\\./"; "") == "'"$NORMALIZED_MODULE"'") | .shared' ../app-config.yaml)
 
             echo "🔍 Valor de SHARED para $module: [$SHARED]"
 
-            if [[ "$SHARED" == "true" ]]; then
+            if [[ "${SHARED,,}" == "true" ]]; then
               echo "🔗 Módulo $module é compartilhado. Executando 'eitri push-version --shared'"
               eitri push-version --shared
             else
