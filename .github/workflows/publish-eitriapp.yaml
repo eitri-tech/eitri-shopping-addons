@@ -52,8 +52,7 @@ jobs:
 
           CHANGED_MODULES=""
 
-          git fetch origin ${{ github.ref_name }}
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.ref_name }})
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
 
           echo "📝 Arquivos alterados:"
           echo "$CHANGED_FILES"
