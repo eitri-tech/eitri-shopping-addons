@@ -1,0 +1,95 @@
+name: Manual Publish Eitri Apps
+
+on:
+  workflow_dispatch:
+    inputs:
+      modules_to_process:
+        description: 'Lista de módulos separados por vírgula (ex: eitri-app-1,eitri-app-2)'
+        required: true
+        type: string
+      env_id:
+        description: 'ID do ambiente para publicar ou "none" para não publicar'
+        required: true
+        type: choice
+        options:
+          - '55761c57-81bb-4189-999c-38b12ed14956'  # DEV
+          - '2ddcf3e5-3bd3-492e-82b3-4830a0674636'  # PROD
+          - 'none'  # Não publicar
+
+env:
+  EITRI_CLI_CLIENT_ID: ${{ secrets.EITRI_CLI_CLIENT_ID }}
+  EITRI_CLI_CLIENT_SECRET: ${{ secrets.EITRI_CLI_CLIENT_SECRET }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Eitri CLI
+        run: npm install -g eitri-cli
+
+      - name: Install yq v4 locally
+        run: |
+          mkdir -p $HOME/bin
+          curl -L https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_linux_amd64 -o $HOME/bin/yq
+          chmod +x $HOME/bin/yq
+          echo "$HOME/bin" >> $GITHUB_PATH
+          yq --version
+
+      - name: Process selected modules
+        run: |
+          set -e
+          set -x
+          trap 'echo "❌ Falha no processamento dos eitri-apps!"' ERR
+
+          IFS=',' read -ra MODULES <<< "${{ github.event.inputs.modules_to_process }}"
+
+          for module in "${MODULES[@]}"; do
+            module=$(echo "$module" | xargs)  # remove espaços extras
+            echo "🚀 Processando eitri-app: [$module]"
+
+            if [ ! -d "$module" ]; then
+              echo "⚠️ Diretório $module não encontrado. Pulando..."
+              continue
+            fi
+
+            cd $module
+
+            NORMALIZED_MODULE=$(printf '%s' "$module" | tr -d '\r\n')
+            echo "✅ Normalized eitri-app: [$NORMALIZED_MODULE]"
+
+            echo "✅ Todos os paths em app-config.yaml:"
+            yq eval '.eitri-apps[].path' ../app-config.yaml
+
+            SHARED=$(yq eval '.eitri-apps[] | select(.path | sub("^\\./"; "") == "'"$NORMALIZED_MODULE"'") | .shared' ../app-config.yaml)
+
+            echo "🔍 Valor de SHARED para $module: [$SHARED]"
+
+            if [[ "${SHARED,,}" == "true" ]]; then
+              echo "🔗 Eitri-app $module é compartilhado. Executando 'eitri push-version --shared'"
+              eitri push-version --shared
+            else
+              echo "🔗 Eitri-app $module não é compartilhado. Executando 'eitri push-version'"
+              eitri push-version
+            fi
+
+            if [[ "${{ github.event.inputs.env_id }}" != "none" ]]; then
+              echo "📦 Publicando com 'eitri publish -e ${{ github.event.inputs.env_id }}'"
+              eitri publish -e ${{ github.event.inputs.env_id }}
+            else
+              echo "🚫 Publicação desativada conforme seleção de 'não publicar'."
+            fi
+
+            cd -
+            echo "✅ Finalizado processamento do eitri-app: $module"
+          done
