@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Pega todo histórico para que merge-base funcione corretamente
+          fetch-depth: 0  # Necessário para merge-base
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -73,9 +73,14 @@ jobs:
           for path in $MODULE_PATHS; do
             NORMALIZED_PATH=${path#./}
             echo "🔎 Verificando se $NORMALIZED_PATH foi alterado..."
-            if echo "$CHANGED_FILES" | grep -q "^${NORMALIZED_PATH}/"; then
+
+            MATCH=$(echo "$CHANGED_FILES" | grep -E "^${NORMALIZED_PATH}/" || true)
+
+            if [ -n "$MATCH" ]; then
               echo "✅ Módulo $path alterado."
               CHANGED_MODULES="$CHANGED_MODULES $path"
+            else
+              echo "❌ Nenhuma alteração detectada em $path."
             fi
           done
 
@@ -95,6 +100,11 @@ jobs:
 
           for module in ${{ steps.detect.outputs.changed_modules }}; do
             echo "🚀 Processando módulo: $module"
+
+            if [ ! -d "$module" ]; then
+              echo "⚠️ Diretório $module não encontrado. Pulando..."
+              continue
+            fi
 
             cd $module
 
