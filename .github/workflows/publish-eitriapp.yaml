@@ -1,7 +1,7 @@
 name: Publish Eitri Apps
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
       - main
@@ -21,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Necessário para merge-base
+          fetch-depth: 0  # Para garantir que todos os commits estão disponíveis
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -55,13 +55,13 @@ jobs:
 
           CHANGED_MODULES=""
 
-          echo "🔄 Buscando alterações remotas..."
-          git fetch --all
+          BASE_SHA=${{ github.event.pull_request.base.sha }}
+          HEAD_SHA=${{ github.event.pull_request.head.sha }}
 
-          MERGE_BASE=$(git merge-base HEAD origin/${{ github.ref_name }})
-          echo "🔗 Merge-base encontrado: $MERGE_BASE"
+          echo "🔗 Base SHA: $BASE_SHA"
+          echo "🔗 Head SHA: $HEAD_SHA"
 
-          CHANGED_FILES=$(git diff --name-only $MERGE_BASE HEAD)
+          CHANGED_FILES=$(git diff --name-only $BASE_SHA $HEAD_SHA)
 
           echo "📝 Arquivos alterados detectados:"
           echo "$CHANGED_FILES"
@@ -110,7 +110,7 @@ jobs:
 
             cd $module
 
-            if [[ "${{ github.ref_name }}" == "main" ]]; then
+            if [[ "${{ github.base_ref }}" == "main" ]]; then
               ENV_ID="${{ env.PROD_ENVID }}"
             else
               ENV_ID="${{ env.DEV_ENVID }}"
