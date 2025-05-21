@@ -2,6 +2,8 @@ name: Publish Eitri Apps
 
 on:
   pull_request:
+    types:
+      - closed
     branches:
       - develop
       - main
@@ -18,6 +20,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check if PR was merged
+        run: |
+          if [ "${{ github.event.pull_request.merged }}" != "true" ]; then
+            echo "❌ PR foi fechado sem merge. Encerrando pipeline."
+            exit 0
+          fi
+          echo "✅ PR foi mergeado. Continuando pipeline..."
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
