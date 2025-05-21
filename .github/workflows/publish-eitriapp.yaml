@@ -146,8 +146,12 @@ jobs:
               eitri push-version
             fi
 
-            echo "📦 Publicando com 'eitri publish -e $ENV_ID'"
-            eitri publish -e $ENV_ID
+            if [[ "${{ github.base_ref }}" == "develop" ]]; then
+              echo "📦 Publicando com 'eitri publish -e $ENV_ID'"
+              eitri publish -e $ENV_ID
+            else
+              echo "🚫 Publicação desativada, PR não é para develop."
+            fi
 
             cd -
             echo "✅ Finalizado processamento do eitri-app: $module"
