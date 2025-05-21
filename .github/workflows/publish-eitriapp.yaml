@@ -128,7 +128,10 @@ jobs:
 
             echo "🌍 Ambiente selecionado: $ENV_ID"
 
-            SHARED=$(yq eval '. "eitri-apps"[] | select(.path == "./'"$(printf '%s' "$module")"'") | .shared // "false"' ../app-config.yaml)
+            NORMALIZED_MODULE=$(printf '%s' "$module" | tr -d '\r\n')
+            echo "🔍 Normalized module: [$NORMALIZED_MODULE]"
+
+            SHARED=$(yq eval '. "eitri-apps"[] | select(.path == "./'"$NORMALIZED_MODULE"'" or .path == "'"$NORMALIZED_MODULE"'") | .shared' ../app-config.yaml)
 
             echo "🔍 Valor de SHARED para $module: [$SHARED]"
 
