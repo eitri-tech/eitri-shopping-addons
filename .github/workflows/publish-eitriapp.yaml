@@ -110,11 +110,15 @@ jobs:
           set -x
           trap 'echo "❌ Falha no processamento dos eitri-apps!"' ERR
 
+          SUCCESSFUL_MODULES=""
+          FAILED_MODULES=""
+
           for module in ${{ steps.detect.outputs.changed_modules }}; do
             echo "🚀 Processando eitri-app: $module"
 
             if [ ! -d "$module" ]; then
               echo "⚠️ Diretório $module não encontrado. Pulando..."
+              FAILED_MODULES="$FAILED_MODULES $module"
               continue
             fi
 
@@ -140,15 +144,41 @@ jobs:
 
             if [[ "${SHARED,,}" == "true" ]]; then
               echo "🔗 Eitri-app $module é compartilhado. Executando 'eitri push-version --shared'"
-              eitri push-version --shared
+              if ! eitri push-version --shared; then
+                echo "❌ Falha ao executar push-version --shared no módulo $module"
+                FAILED_MODULES="$FAILED_MODULES $module"
+                cd -
+                continue
+              fi
             else
               echo "🔗 Eitri-app $module não é compartilhado. Executando 'eitri push-version'"
-              eitri push-version
+              if ! eitri push-version; then
+                echo "❌ Falha ao executar push-version no módulo $module"
+                FAILED_MODULES="$FAILED_MODULES $module"
+                cd -
+                continue
+              fi
             fi
 
-            echo "📦 Publicando com 'eitri publish -e $ENV_ID'"
-            eitri publish -e $ENV_ID
+            if [[ "${{ github.base_ref }}" == "develop" ]]; then
+              echo "📦 Publicando com 'eitri publish -e $ENV_ID'"
+              if ! eitri publish -e $ENV_ID; then
+                echo "❌ Falha ao executar publish no módulo $module"
+                FAILED_MODULES="$FAILED_MODULES $module"
+                cd -
+                continue
+              fi
+            else
+              echo "🚫 Publicação desativada, PR não é para develop."
+            fi
+
+            SUCCESSFUL_MODULES="$SUCCESSFUL_MODULES $module"
 
             cd -
             echo "✅ Finalizado processamento do eitri-app: $module"
           done
+
+          echo "======================================"
+          echo "✅ Módulos processados com sucesso: $SUCCESSFUL_MODULES"
+          echo "❌ Módulos que falharam: $FAILED_MODULES"
+          echo "======================================"
