@@ -4,8 +4,8 @@ eitri-apps:
   alias: home
   focus: true
   shared: false
-- path: ./eitri-shopping-addon-vtex-ads
-  workspace: eitri-shopping-addon-vtex-ads
+- path: ./eitri-shopping-addons-vtex-ads
+  workspace: eitri-shopping-addons-vtex-ads
   alias: vtex-ads
   focus: false
   shared: true

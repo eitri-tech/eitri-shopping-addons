@@ -1,7 +1,7 @@
 module.exports = {
-  "name": "eitri-shopping-addon-vtex-ads",
-  "title": "eitri-shopping-addon-vtex-ads",
-  "slug": "eitri-shopping-addon-vtex-ads",
+  "name": "eitri-shopping-addons-vtex-ads",
+  "title": "eitri-shopping-addons-vtex-ads",
+  "slug": "eitri-shopping-addons-vtex-ads",
   "eitri-luminus": "2.0.6",
   "eitri-bifrost": "3.9.1",
   "eitri-commons": "2.1.2",
