@@ -26,7 +26,7 @@ export default function Home(props) {
   // Verificar formato do result com mais de um banner
   const fetchAddons = async () => {
     try {
-      const result = await AddonService.getAddons(requestData, "72c5a3e2-853e-449d-afda-fa41d8eb2bec");
+      const result = await AddonService.getAds(requestData, "72c5a3e2-853e-449d-afda-fa41d8eb2bec");
       await setAddons(result.bannerhome);
       console.log("Notifying impression...");
       await notifyEvent(result.bannerhome[0].impression_url);

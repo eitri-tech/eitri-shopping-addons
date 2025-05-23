@@ -1,7 +1,7 @@
 import Eitri from "eitri-bifrost";
 
 export default class AddonService {
-  static async getAddons(data, publisherId, baseUrl = 'https://newtail-media.newtail.com.br/v1/rma/') {
+  static async getAds(data, publisherId, baseUrl = 'https://newtail-media.newtail.com.br/v1/rma/') {
     try {
       const response = await Eitri.http.post(baseUrl + publisherId, data);
       return response.data;

@@ -20,7 +20,7 @@ The `AddonService` handles communication between your Eitri application and [Vte
 
 The `AddonService.js` exposes two main static methods:
 
-#### `getAddons(data, publisherId, baseUrl?)`
+#### `getAds(data, publisherId, baseUrl?)`
 
 This method performs a POST request to the Vtex Ads API to retrieve media assets based on user session, search term, and placement configuration.
 
@@ -35,7 +35,7 @@ const requestData = {
   },
 }
 
-await AddonService.getAddons(requestData, "PUBLISHER_ID");
+await AddonService.getAds(requestData, "PUBLISHER_ID");
 ```
 
 - **data**: Object containing context, search term, user/session IDs, and placement configuration.
