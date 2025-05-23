@@ -14,7 +14,7 @@ Eitri Shopping combines scalability, customization, and seamless UX to boost con
 
 ### Avaliable addons
 
-1. [Vtex Newtail](https://github.com/eitri-tech/eitri-shopping-addons/tree/main/eitri-shopping-addon-vtex-newtail)
+1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons/tree/main/eitri-shopping-addon-vtex-ads)
 
 ### How to setup an Eitri Shopping Addon?
 
@@ -26,8 +26,8 @@ To use and addon, include a **"eitri-app-dependencies"** section in you `eitri-a
 
 ```js
   "eitri-app-dependencies": {
-    "eitri-shopping-addon-vtex-newtail": {
-      "version": "0.1.0"
+    "eitri-shopping-addon-vtex-ads": {
+      "version": "1.0.0"
     }
   },
 ```
@@ -49,8 +49,8 @@ module.exports = {
   "organizationId": "cf5660ee-bf90-42cd-9a43-9d2c69ee3c89",
   "organization": {},
   "eitri-app-dependencies": {
-    "eitri-shopping-addon-vtex-newtail": {
-      "version": "0.1.0"
+    "eitri-shopping-addon-vtex-ads": {
+      "version": "1.0.0"
     }
   },
   "type": "module"
