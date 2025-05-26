@@ -30,7 +30,7 @@ export default class AddonService {
       const response = await Eitri.http.get(fullUrl);
       if (!response || !response.data) {
         console.warn("@AddonService._getVtexProducts - Resposta inválida da VTEX", response);
-        throw new Error("Resposta inválida da VTEX", response);
+        throw new Error("Resposta inválida da VTEX");
       }
       return response.data;
     } catch (error) {
@@ -91,7 +91,6 @@ export default class AddonService {
       const response = await Eitri.http.post(url, body);
   
       if (response.status >= 200 && response.status < 300) {
-        console.log("URL triggered successfully:", url);
       } else {
         console.warn("Unexpected response status for URL:", response.status);
       }
