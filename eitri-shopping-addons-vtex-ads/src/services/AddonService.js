@@ -10,45 +10,49 @@ export default class AddonService {
       throw error;
     }
   }
-/*
 
-TEMOS
+  /**
+   * Método interno para obter a informação completa dos produtos da VTEX recebidos como array de SKUs
+   * @param {Array<string>} productSkus - Array de productSkus.
+   * @param {string} vtexUrl - baseURL utilizada para requisição da VTEX.
+   * @returns {Promise<Object>} São retornadas informações completas de cada produto do array.
+   * @throws Retornará um erro caso não tenha sido informada a URL da VTEX, ou aconteça algum problema na requisição.
+  */
+  static async _getVtexProducts(productSkus, vtexUrl) {
+    if(!vtexUrl){
+      console.warn("@AddonService.getVtexProducts - vtexUrl não informada");
+      throw new Error("Vtex Url ausente");
+    }
 
-{
-  "ad_id": "f89d2841-e05e-4fe0-8f48-75971610f87e",
-  "campaign_name": "home_3_prod_patroc",
-  "click_url": "https://events.newtail-media.newtail.com.br/v1/beacon/click/f89d2841-e05e-4fe0-8f48-75971610f87e?publisher_id=72c5a3e2-853e-449d-afda-fa41d8eb2bec&ad_type=product&campaign_id=c15a89b3-7df3-4f79-a3d1-8c02043d5767&pname=home_3_prod_patroc&context=home&event_id=98ef4c6a-bd4e-4ba7-88e5-56549257353c&request_id=019a5823-8279-4d7e-982f-4f0e077966de&session_id=12345&requested_at=1748033170462&sign=0f289dfcfcd47cbe36c5c871eb635e329b7ffdd2df6b20b4c0ab1720aa342b31",
-  "destination_url": "/aparelho-barbear-mach3-sensi---gillette-mach3/p",
-  "impression_url": "https://events.newtail-media.newtail.com.br/v1/beacon/impression/f89d2841-e05e-4fe0-8f48-75971610f87e?publisher_id=72c5a3e2-853e-449d-afda-fa41d8eb2bec&ad_type=product&campaign_id=c15a89b3-7df3-4f79-a3d1-8c02043d5767&pname=home_3_prod_patroc&context=home&event_id=98ef4c6a-bd4e-4ba7-88e5-56549257353c&request_id=019a5823-8279-4d7e-982f-4f0e077966de&session_id=12345&requested_at=1748033170462&sign=3c8c17047105f7072bb30a453a9e117ed2ee1941058fa3d12cef4e52f28c5e35",
-  "position": 4,
-  "product_metadata": {},
-  "product_name": "Aparelho Barbear Mach3 Sensi - Gillette Mach3",
-  "product_sku": "677",
-  "seller_id": null,
-  "type": "product",
-  "view_url": "https://events.newtail-media.newtail.com.br/v1/beacon/view/f89d2841-e05e-4fe0-8f48-75971610f87e?publisher_id=72c5a3e2-853e-449d-afda-fa41d8eb2bec&ad_type=product&campaign_id=c15a89b3-7df3-4f79-a3d1-8c02043d5767&pname=home_3_prod_patroc&context=home&event_id=98ef4c6a-bd4e-4ba7-88e5-56549257353c&request_id=019a5823-8279-4d7e-982f-4f0e077966de&session_id=12345&requested_at=1748033170462&sign=d3c0f145fcd746f0e8f7fa7b52ed79b854df793238328d896006dae5ce75757f"
-},
+    try {
+      const skuQueryString = productSkus.map(sku => `fq=skuId:${sku}`).join('&');
+      const fullUrl = `${vtexUrl}?${skuQueryString}`;
+      const response = await Eitri.http.get(fullUrl);
+      if (!response || !response.data) {
+        console.warn("@AddonService._getVtexProducts - Resposta inválida da VTEX", response);
+        throw new Error("Resposta inválida da VTEX", response);
+      }
+      return response.data;
+    } catch (error) {
+      console.error("@AddonService.getVtexProducts - Houve um erro na requisição de produtos da vtex", error);
+      throw error;
+    }
+  }
 
-
-  PREÇO
-  IMAGEM
-  CONDIÇÕES DE PAGAMENTO 
-  DESCONTO
-
-1° pegar os SKUs da newTail
-2° mapear em array de SKUs
-3° fazer a chamada na VTEX passando os SKUs
-
-https://torratorra.vtexcommercestable.com.br/api/catalog_system/pub/products/search?fq=skuId:135802&fq=skuId:166807
-*/
+   /**
+   * Método para obter primeiramente obter um array de SKUs
+   * @param {Object} data - Objeto contendo os dados necessários para a requisição.
+   * @param {string} publisherId - ID do publisher do VTEXAds.
+   * @param {string} baseUrl - baseURL necessária para requisição da VTEXAds.
+   * @returns {Promise<Object>} São retornadas todas as informações de cada um dos produtos inseridos no array.
+   * @throws Retornará um erro caso aconteça algum problema na requisição.
+  */
   static async getProductsAds(data, publisherId, baseUrl = 'https://newtail-media.newtail.com.br/v1/rma/') {
     const remoteConfig = await Eitri.environment.getRemoteConfigs()
     const account = remoteConfig?.providerInfo?.account
 
-    // const vtexBaseUrl = `https://${account}.vtexcommercestable.com.br/api/catalog_system/pub/products/search?fq=skuId:135802&fq=skuId:166807`;
     let vtexAdsData = null;
     let productSkus = null;
-    const arrVtexProducts = []
 
     try {
       const response = await Eitri.http.post(baseUrl + publisherId, data);
@@ -62,25 +66,20 @@ https://torratorra.vtexcommercestable.com.br/api/catalog_system/pub/products/sea
         }
 			}
 
-  
-      if (productSkus && Array.isArray(productSkus)) {
-        const skuQueryString = productSkus.map(sku => `fq=skuId:${sku}`).join('&');
-        const vtexUrl = `https://${account}.vtexcommercestable.com.br/api/catalog_system/pub/products/search?${skuQueryString}`;
-        const responseVtex = await Eitri.http.get(vtexUrl);
-        console.info("VresponseVtex", JSON.stringify(responseVtex.data));
-      } 
-      
+      if (!productSkus || !Array.isArray(productSkus)){
+        console.warn("@AddonService.getProductsAds - Houve um erro com os productSkus ", productSkus);
+        return
+      }
 
-      return response.data;
+      const vtexBaseUrl = `https://${account}.vtexcommercestable.com.br/api/catalog_system/pub/products/search`;
+      const fullProducts = await this._getVtexProducts(productSkus, vtexBaseUrl)
+
+      return fullProducts;
     } catch (error) {
-      console.error("Error during search API call:", error);
+      console.error("@AddonService.getProductsAds - Houve um erro ao obter os produtos patrocinados:", error);
       throw error;
     }
   }
-
-
-  
-
 
   static async notifyEvent(url, data) {
     try {
