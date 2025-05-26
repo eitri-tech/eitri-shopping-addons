@@ -23,6 +23,15 @@ export default function Home(props) {
     },
   };
 
+  const mock = {     
+    context: "home",     
+    user_id: null,     
+    session_id: "12345",     
+    placements: { 
+      home_3_prod_patroc: { quantity: 6, types: ["product"] }     
+    } 
+  }
+
   // Verificar formato do result com mais de um banner
   const fetchAddons = async () => {
     try {
