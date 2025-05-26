@@ -74,7 +74,12 @@ export default class AddonService {
       const vtexBaseUrl = `https://${account}.vtexcommercestable.com.br/api/catalog_system/pub/products/search`;
       const fullProducts = await this._getVtexProducts(productSkus, vtexBaseUrl)
 
-      return fullProducts;
+      const fullObj = {
+        vtexAdsMetadata: vtexAdsData,
+        vtexProducts: fullProducts
+      }
+
+      return fullObj;
     } catch (error) {
       console.error("@AddonService.getProductsAds - Houve um erro ao obter os produtos patrocinados:", error);
       throw error;
