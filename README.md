@@ -14,13 +14,14 @@ Eitri Shopping combines scalability, customization, and seamless UX to boost con
 
 ### Avaliable addons
 
-1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons/tree/main/eitri-shopping-addon-vtex-ads)
+1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads)
+2. [Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver)
 
 ### How to setup an Eitri Shopping Addon?
 
 Each Eitri-App has a `eitri-app.conf.js` file where you set the basic configs for your Eitri-App.
 
-To use and addon, include a **"eitri-app-dependencies"** section in you `eitri-app.conf.js` file with the addon you need and the respective version of it.
+To use and addon, include an **"eitri-app-dependencies"** section in you `eitri-app.conf.js` file with the addon you need and the respective version of it.
 
 > Each addon work as a separated Eitri-App and have it's own versioning. To know the versions of each addon, check their links on Avaliable Addons section.
 
