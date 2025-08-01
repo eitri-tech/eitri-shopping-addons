@@ -19,11 +19,23 @@ The way you need to setup or configure new add-ons depends on add-on type. Each 
 
 #### `PLUG-N-PLAY` :electric_plug: 
 
-Those plugins are pre-build solutions that need only a small configuration in your apps environment or code and are ready to work without needing to code.
+Those add-ons are ready-to-use solutions and you need only to do some sort of setup in your apps remote environment configuration or in your app/eitri-app configuration files. This type of add-on doesn't require development or specific code.
+
+The necessary configuration will depend on wich add-on you need. For details go to add-on specific documentation over the section [Avaliable add-ons](#avaliable-add-ons).
 
 #### `TEMPLATE` :package: 
 
 Template add-ons are solutions built as a fully working model to serve as a starting point for cases when you need to customize or expand the possibilities since they can can add entire features to your app with full customization support throught coding.
+
+<details>
+<summary>Como configurar um add-on como :paperclip: dependência?</summary>
+<br>
+<br>
+Cada Eitri-app tem um arquivo `eitri-app.conf.js` onde você define as configurações básicas de seu eitri-app.
+
+Para utilizar um add-on como dependência, inclua uma sessão **"eitri-app-dependencies"** em seu arquivo `eitri-app.conf.js` com o add-on que você deseja e a sua respectiva versão.
+</details>
+
 
 #### `DEPENDENCY` :paperclip: 
 
@@ -80,4 +92,3 @@ module.exports = {
 
 1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads) :paperclip:
 2. [Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver) :electric_plug: | :package:
-

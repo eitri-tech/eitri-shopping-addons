@@ -18,11 +18,25 @@ A configuração de um add-on vai depender do seu tipo. Cada add-on tem seu pró
 
 #### `PLUG-N-PLAY` :electric_plug: 
 
-Estes add-ons são soluções pré-construidas que precisa apenas de uma configuração nas configurações de ambiente, do app ou de um Eitri-app e estarão prontos para utilizar, sem necessidade de desenvolvimento.
+Estes add-ons são soluções prontas para uso, sendo necessário apenas fazer algum tipo de configuração seja na configuração remota de ambiente do seu aplicativo, seja em algum arquivo de configuração de seu app/eitri-app. Este tipo de add-on exige apenas a configuração, sem desenvolvimento ou código específico.
+
+A configuração necessária vai depender de qual o add-on. Para detalhes específicos, consulte a documentação detalhada do add-on na seção [Add-ons disponíveis](#add-ons-disponíveis).
 
 #### `TEMPLATE` :package: 
 
 Add-ons de template são soluções construídas como um modelo funcional que serve como ponto de partida para casos onde você precisa personalizar e expandir as possibilidades de seu app uma vez que eles podem adicionar toda uma nova funcionalidade oferecendo suporte à personalização completa desenvolvendo sobre a base de código do template.
+
+<details>
+<summary>Como configurar/instalar um add-on :package: template?</summary>
+<br>
+<br>
+Um add-on do tipo template pode ser criado/instalado em seu app Eitri utilizando o comando [`eitri create`](#) com o parâmetro `--template`.
+
+Isso permitirá que você selecione um template para criar seu eitri-app e em seguida personaliza-lo da forma que for mais conveniente.
+
+Um eitri-app criado desta forma será atrelado ao seu app e passa a ficar disponível para publicação como qualquer outro eitri-app sob a gestão da sua organização e com o código disponível para desenvolver conforme suas necessidades.
+</details>
+
 
 #### `DEPENDÊNCIA` :paperclip: 
 
@@ -77,4 +91,3 @@ module.exports = {
 
 1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads) :paperclip:
 2. [Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver) :electric_plug: | :package:
-
