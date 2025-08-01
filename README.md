@@ -26,8 +26,8 @@ Dependency add-ons offer a quick way to incorporate ready to use methods, compon
 
 ### Avaliable addons
 
-1. :paperclip: [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads)
-2. :electric_plug: | :package: [Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver)
+1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads) :paperclip:
+2. [Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver) :electric_plug: | :package:
 
 ### How to setup an Eitri Shopping Addon?
 
