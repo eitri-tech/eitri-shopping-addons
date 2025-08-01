@@ -12,17 +12,20 @@ Eitri App Shopping combines scalability, customization, and seamless UX to boost
 
 [Eitri Shopping Addons](https://github.com/eitri-tech/eitri-shopping-addons) are a fast and easy way to integrate common provider resources into your Eitri applications. You just need to set your Eitri-Apps to use the selected addon wherever you need to use it.
 
-The setup for each add-on is described in wich repository but basically there are 3 types of add-ons:
 
-### `PLUG-N-PLAY` :electric_plug: 
+### Add-on types
+
+The way you need to setup or configure new add-ons depends on add-on type. Each of them have it's own ways to be setup but basically we have 3 types:
+
+#### `PLUG-N-PLAY` :electric_plug: 
 
 Those plugins are pre-build solutions that need only a small configuration in your apps environment or code and are ready to work without needing to code.
 
-### `TEMPLATE` :package: 
+#### `TEMPLATE` :package: 
 
 Template add-ons are solutions built as a fully working model to serve as a starting point for cases when you need to customize or expand the possibilities since they can can add entire features to your app with full customization support throught coding.
 
-### `DEPENDENCY` :paperclip: 
+#### `DEPENDENCY` :paperclip: 
 
 Dependency add-ons offer a quick way to incorporate ready to use methods, components and other elements into your app. It work basically as libs into your Eitri Application. Just declare the dependency in your Eitri-apps, import whenever you need to use and check the add-on doc to use the features and methods and start using it in your code.
 
