@@ -1,47 +1,42 @@
-# About Eitri
+# O que é Eitri?
 
-Eitri is a modular platform for building powerful mobile apps with agility and scale.
+Eitri é uma plataforma para desenvolver aplicativos móveis modulares poderosos com agilidade e escalabilidade.
 
-Learn more about [Eitri](https://www.eitri.tech/)
+Saiba mais sobre a [Eitri](https://www.eitri.tech/)
 
 # Eitri App Shopping
 
-Eitri App Shopping combines scalability, customization, and seamless UX to boost conversion and engagement.
+Eitri App Shopping é a solução de ecommerce da Eitri que combina escalabilidade, customização e UX sem frição para incrementar sua conversão e engajamento.
 
 ## Eitri Shopping Addons
 
-[Eitri Shopping Addons](https://github.com/eitri-tech/eitri-shopping-addons) are a fast and easy way to integrate common provider resources into your Eitri applications. You just need to set your Eitri-Apps to use the selected addon wherever you need to use it.
+[Eitri Shopping Addons](https://github.com/eitri-tech/eitri-shopping-addons) são uma maneira rápida e fácil de integrar provedores de recursos e funcionalidades em suas aplicações Eitri. Você só precisa configurar seus Eitri-apps para utilizarem os add-ons escolhidos e começar a utiliza-los.
 
+### Tipos de add-on
 
-### Add-on types
-
-The way you need to setup or configure new add-ons depends on add-on type. Each of them have it's own ways to be setup but basically we have 3 types:
+A configuração de um add-on vai depender do seu tipo. Cada add-on tem seu próprio setup necessário mas basicamente nós temos os 3 seguintes tipos:
 
 #### `PLUG-N-PLAY` :electric_plug: 
 
-Those plugins are pre-build solutions that need only a small configuration in your apps environment or code and are ready to work without needing to code.
+Estes add-ons são soluções pré-construidas que precisa apenas de uma configuração nas configurações de ambiente, do app ou de um Eitri-app e estarão prontos para utilizar, sem necessidade de desenvolvimento.
 
 #### `TEMPLATE` :package: 
 
-Template add-ons are solutions built as a fully working model to serve as a starting point for cases when you need to customize or expand the possibilities since they can can add entire features to your app with full customization support throught coding.
+Add-ons de template são soluções construídas como um modelo funcional que serve como ponto de partida para casos onde você precisa personalizar e expandir as possibilidades de seu app uma vez que eles podem adicionar toda uma nova funcionalidade oferecendo suporte à personalização completa desenvolvendo sobre a base de código do template.
 
 #### `DEPENDENCY` :paperclip: 
 
-Dependency add-ons offer a quick way to incorporate ready to use methods, components and other elements into your app. It work basically as libs into your Eitri Application. Just declare the dependency in your Eitri-apps, import whenever you need to use and check the add-on doc to use the features and methods and start using it in your code.
+Dependencias são uma forma rápida de incorporar métodos, componentes e outros elementos prontos para uso em seu app. Funcionam basicamente como uma biblioteca em seu app Eitri. Declare o add-on como dependência em seus Eitri-apps, importe-o onde quer que você precise utiliza-lo e consulte a documentação do add-on para verificar o que ele oferece como recurso para usar em seu código.
 
+<details>
+<summary>Como configurar um add-on `DEPENDENCY` :paperclip:?</summary>
 
-### Avaliable addons
+Cada Eitri-app tem um arquivo `eitri-app.conf.js` onde você define as configurações básicas de seu eitri-app.
 
-1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads) :paperclip:
-2. [Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver) :electric_plug: | :package:
+Para utilizar um add-on como dependência, inclua uma sessão **"eitri-app-dependencies"** em seu arquivo `eitri-app.conf.js` com o add-on que você deseja e a sua respectiva versão.
 
-### How to setup an Eitri Shopping Addon?
-
-Each Eitri-App has a `eitri-app.conf.js` file where you set the basic configs for your Eitri-App.
-
-To use and addon, include an **"eitri-app-dependencies"** section in you `eitri-app.conf.js` file with the addon you need and the respective version of it.
-
-> Each addon work as a separated Eitri-App and have it's own versioning. To know the versions of each addon, check their links on Avaliable Addons section.
+> [!IMPORTANT]
+> Cada add-on funciona como um eitri-app separado e tem seu próprio versionamento. Para saber mais sobre as versões de cada add-on, confira o seus links na sessão [Add-ons disponíveis](#add-ons-disponíveis)
 
 ```js
   "eitri-app-dependencies": {
@@ -51,7 +46,7 @@ To use and addon, include an **"eitri-app-dependencies"** section in you `eitri-
   },
 ```
 
-#### Addon use example:
+##### Exemplo de uso de um add-on como dependência:
 
 ```js
 module.exports = {
@@ -75,6 +70,10 @@ module.exports = {
   "type": "module"
 }
 ```
+</details>
 
+### Add-ons disponíveis
 
+1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads) :paperclip:
+2. [Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver) :electric_plug: | :package:
 
