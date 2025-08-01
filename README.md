@@ -24,13 +24,14 @@ Estes add-ons são soluções pré-construidas que precisa apenas de uma configu
 
 Add-ons de template são soluções construídas como um modelo funcional que serve como ponto de partida para casos onde você precisa personalizar e expandir as possibilidades de seu app uma vez que eles podem adicionar toda uma nova funcionalidade oferecendo suporte à personalização completa desenvolvendo sobre a base de código do template.
 
-#### `DEPENDENCY` :paperclip: 
+#### `DEPENDÊNCIA` :paperclip: 
 
-Dependencias são uma forma rápida de incorporar métodos, componentes e outros elementos prontos para uso em seu app. Funcionam basicamente como uma biblioteca em seu app Eitri. Declare o add-on como dependência em seus Eitri-apps, importe-o onde quer que você precise utiliza-lo e consulte a documentação do add-on para verificar o que ele oferece como recurso para usar em seu código.
+Dependências são uma forma rápida de incorporar métodos, componentes e outros elementos prontos para uso em seu app. Funcionam basicamente como uma biblioteca em seu app Eitri. Declare o add-on como dependência em seus Eitri-apps, importe-o onde quer que você precise utiliza-lo e consulte a documentação do add-on para verificar o que ele oferece como recurso para usar em seu código.
 
 <details>
-<summary>Como configurar um add-on `DEPENDENCY` :paperclip:?</summary>
-
+<summary>Como configurar um add-on como :paperclip: dependência?</summary>
+<br>
+<br>
 Cada Eitri-app tem um arquivo `eitri-app.conf.js` onde você define as configurações básicas de seu eitri-app.
 
 Para utilizar um add-on como dependência, inclua uma sessão **"eitri-app-dependencies"** em seu arquivo `eitri-app.conf.js` com o add-on que você deseja e a sua respectiva versão.

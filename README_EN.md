@@ -32,8 +32,9 @@ Dependency add-ons offer a quick way to incorporate ready to use methods, compon
 ##### How to setup an Eitri Shopping Add-on?
 
 <details>
-<summary>How to setup an Eitri Shopping add-on `DEPENDENCY` :paperclip:?</summary>
-
+<summary>How to setup an Eitri Shopping add-on :paperclip: dependency?</summary>
+<br>
+<br>
 Each Eitri-App has a `eitri-app.conf.js` file where you set the basic configs for your Eitri-App.
 
 To use and add-on as dependency, include an **"eitri-app-dependencies"** section in you `eitri-app.conf.js` file with the addon you need and the respective version of it.
