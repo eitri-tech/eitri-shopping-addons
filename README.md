@@ -92,3 +92,4 @@ module.exports = {
 1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads) :paperclip:
 2. [Vtex Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver) :electric_plug: | :package:
 3. [Vtex Checkout V2](https://github.com/eitri-tech/eitri-shopping-addons-checkout) :electric_plug: | :package:
+4. Wake Deeplink Resolver (Em breve) :electric_plug: | :package:
