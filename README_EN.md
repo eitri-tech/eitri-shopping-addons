@@ -19,7 +19,7 @@ The way you need to setup or configure new add-ons depends on add-on type. Each 
 
 #### `PLUG-N-PLAY` :electric_plug: 
 
-Those add-ons are ready-to-use solutions and you need only to do some sort of setup in your apps remote environment configuration or in your app/eitri-app configuration files. This type of add-on doesn't require development or specific code.
+Those add-ons are ready-to-use solutions and you need only to do some sort of setup in your apps remote environment configuration, in your app/eitri-app configuration files or in your eitriapp alias list. This type of add-on doesn't require development or specific code.
 
 The necessary configuration will depend on wich add-on you need. For details go to add-on specific documentation over the section [Avaliable add-ons](#avaliable-add-ons).
 

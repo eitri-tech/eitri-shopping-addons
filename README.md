@@ -18,7 +18,7 @@ A configuração de um add-on vai depender do seu tipo. Cada add-on tem seu pró
 
 #### `PLUG-N-PLAY` :electric_plug: 
 
-Estes add-ons são soluções prontas para uso, sendo necessário apenas fazer algum tipo de configuração seja na configuração remota de ambiente do seu aplicativo, seja em algum arquivo de configuração de seu app/eitri-app. Este tipo de add-on exige apenas a configuração, sem desenvolvimento ou código específico.
+Estes add-ons são soluções prontas para uso, sendo necessário apenas fazer algum ajuste na configuração remota de ambiente do seu aplicativo, em algum arquivo de configuração de seu app/eitri-app ou em algum apontamento de alias. Este tipo de add-on exige apenas a configuração, sem desenvolvimento ou código específico.
 
 A configuração necessária vai depender de qual o add-on. Para detalhes específicos, consulte a documentação detalhada do add-on na seção [Add-ons disponíveis](#add-ons-disponíveis).
 
@@ -91,3 +91,4 @@ module.exports = {
 
 1. [Vtex Ads](https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads) :paperclip:
 2. [Deeplink Resolver](https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver) :electric_plug: | :package:
+3. [Vtex Checkout V2](https://github.com/eitri-tech/eitri-shopping-addons-checkout) :electric_plug: | :package:
