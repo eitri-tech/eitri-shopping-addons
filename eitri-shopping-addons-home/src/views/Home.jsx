@@ -1,36 +1,85 @@
-import { useTranslation } from "eitri-i18n";
 import Eitri from "eitri-bifrost";
-import { Text, View, Image, Button, Page } from "eitri-luminus";
+import { Text, View, Button, Page } from "eitri-luminus";
 import HeaderComponent from "../components/HeaderComponent";
-import Presentation from "../assets/images/presentation.webp";
 
 export default function Home(props) {
-  const { t } = useTranslation();
-
   return (
     <Page className="w-screen h-screen">
-      <View className="pt-8 w-full h-full">
-        <HeaderComponent title={t("home.pageTitle")} />
-        <Image className="w-screen" cover src={Presentation} />
+      <View className="flex flex-col w-full h-full pt-8">
+        <HeaderComponent title="Eitri Shopping Addons" showBack={false} />
 
-        <View className="flex flex-col  w-screen h-full justify-between items-center p-4">
-          <View className="prose">
-            <Text render="h3" className="mb-12 font-bold">
-              {t("home.title")}
-            </Text>
-            <Text render="p" className="my-8">
-              {t("home.description")}
-            </Text>
+        <View className="flex flex-col w-full p-6">
+          <Text render="p" className="mb-8">
+            Este projeto traz informações sobre os addons disponíveis para aplicativos usando Eitri Shopping e exemplos de componentes pré prontos para integrações com diversos providers.
+          </Text>
+
+          <Text render="h2" className="text-2xl font-bold mb-4">
+            Avaliable Addons
+          </Text>
+
+          <View className="flex flex-col gap-4 w-full mb-8">
+            <Button
+              className="btn btn-secondary w-full"
+              onClick={async () =>
+                await Eitri.openBrowser({ url: "https://github.com/eitri-tech/eitri-shopping-addons-vtex-ads", inApp: true })
+              }
+            >
+              Vtex Ads
+            </Button>
+
+            <Button
+              className="btn btn-secondary w-full"
+              onClick={async () =>
+                await Eitri.openBrowser({ url: "https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver", inApp: true })
+              }
+            >
+              Vtex Deeplink Resolver
+            </Button>
+
+            <Button
+              className="btn btn-secondary w-full"
+              onClick={async () =>
+                await Eitri.openBrowser({ url: "https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver-wake", inApp: true })
+              }
+            >
+              Wake Deeplink Resolver
+            </Button>
+
+            <Button
+              className="btn btn-secondary w-full"
+              onClick={async () =>
+                await Eitri.openBrowser({ url: "https://github.com/eitri-tech/eitri-shopping-addons-deeplink-resolver-shopify", inApp: true })
+              }
+            >
+              Shopify Deeplink Resolver
+            </Button>
           </View>
 
-          <Button
-            className="btn btn-secondary mt-16 w-full"
-            onClick={async () =>
-              await Eitri.navigation.navigate({ path: "/Products/List" })
-            }
-          >
-            {t("home.button")}
-          </Button>
+          {/* Component Snippets — comentado até a seção estar pronta
+          <Text render="h2" className="text-2xl font-bold mb-8">
+            Component Snippets
+          </Text>
+
+          <View className="flex flex-col gap-4 w-full">
+            <Button
+              className="btn btn-primary w-full"
+              onClick={async () =>
+                await Eitri.navigation.navigate({ path: "/Reviews" })
+              }
+            >
+              Reviews RA/TrustVox
+            </Button>
+
+            <Button
+              className="btn btn-primary w-full"
+              onClick={async () =>
+                await Eitri.navigation.navigate({ path: "/SizeBay" })
+              }
+            >
+              SizeBay Recomendations
+            </Button>
+          </View>
+          */}
         </View>
       </View>
     </Page>
